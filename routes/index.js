@@ -1,6 +1,11 @@
 var express = require('express');
-var router = express.Router();
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
+
 var User = require('../db').User;
+
+var router = express.Router();
+
 
 /* Create a user */
 const createUser = async ({ email, password }) => {
@@ -19,9 +24,9 @@ const getUser = async obj => {
 };
 
 /* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 
 // get all users
 router.get('/users', function(req, res) {
@@ -34,5 +39,30 @@ router.post('/user/register', function(req, res, next) {
     res.json({ user, msg: 'account created successfully' })
   );
 });
+
+// authenticate passportJWT
+router.post('/user/login', async (req, res, next) => {
+  passport.authenticate('login', async (err, user, info) => {
+    try {
+      const { email, password } = req.body;
+      if (email && password) {
+          var user = await getUser({ email });
+          if (!user) {
+              res.status(401).json({ msg: 'No user found', user });
+          }
+          if (user.password === password) {
+              var payload = { email: user.email };
+              var token = jwt.sign({user: payload}, '1612213_top_secret');
+              return res.json({ token });
+          } else {
+              res.status(401).json({ msg: 'Wrong password' });
+          }
+      }
+    } catch (error) {
+      return next(error);
+    }
+  })(req, res, next);
+});
+
 
 module.exports = router;
