@@ -16,6 +16,6 @@ sequelize
 
 const User = UserModel(sequelize, Sequelize);
 
-//sequelize.sync({ force: false }).then(() => console.log('DB synced!'));
+sequelize.sync({ force: false }).then(() => console.log('DB synced!'));
 
 module.exports = { User };

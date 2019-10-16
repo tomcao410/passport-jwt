@@ -8,7 +8,7 @@ const createUser = async ({ email, password }) => {
 };
 
 /* Get a list of all users */
-const usersList = async () => {
+const getAllUsers = async () => {
   return await User.findAll();
 };
 
@@ -22,5 +22,17 @@ const getUser = async obj => {
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' });
 // });
+
+// get all users
+router.get('/users', function(req, res) {
+  getAllUsers().then(user => res.json(user));
+});
+// register route
+router.post('/user/register', function(req, res, next) {
+  const { email, password } = req.body;
+  createUser({ email, password }).then(user =>
+    res.json({ user, msg: 'account created successfully' })
+  );
+});
 
 module.exports = router;

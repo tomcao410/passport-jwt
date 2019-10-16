@@ -1,5 +1,5 @@
 {
-  "name": "passport-jwt",
+  "name": "passport-jwt-restful-api",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -13,8 +13,11 @@
     "express-generator": "^4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
     "mysql2": "^1.7.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
     "sequelize": "^5.19.6"
   }
 }

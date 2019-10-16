@@ -9,9 +9,7 @@ module.exports = function (sequelize, DataTypes) {
         }
     })
 
-    User.sync()
-    .then(() => console.log('Oh yeah! User table created successfully'))
-    .catch(err => console.log('BTW, did you enter wrong database credentials?'));
+
 
     return User;
 }
