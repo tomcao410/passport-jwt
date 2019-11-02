@@ -8,8 +8,8 @@ var router = express.Router();
 
 
 /* Create a user */
-const createUser = async ({ email, password }) => {
-  return await User.create({ email, password });
+const createUser = async ({ userName, password }) => {
+  return await User.create({ userName, password });
 };
 
 /* Get a list of all users */
@@ -34,8 +34,8 @@ router.get('/users', function(req, res) {
 });
 // register route
 router.post('/user/register', function(req, res, next) {
-  const { email, password } = req.body;
-  createUser({ email, password }).then(user =>
+  const { userName, password } = req.body;
+  createUser({ userName, password }).then(user =>
     res.json({ user, msg: 'account created successfully' })
   );
 });
@@ -44,16 +44,16 @@ router.post('/user/register', function(req, res, next) {
 router.post('/user/login', async (req, res, next) => {
   passport.authenticate('login', async (err, user, info) => {
     try {
-      const { email, password } = req.body;
-      if (email && password) {
-          var user = await getUser({ email });
+      const { userName, password } = req.body;
+      if (userName && password) {
+          var user = await getUser({ userName });
           if (!user) {
               res.status(401).json({ msg: 'No user found', user });
           }
           if (user.password === password) {
-              var payload = { email: user.email };
+              var payload = { userName: user.userName };
               var token = jwt.sign({user: payload}, '1612213_top_secret');
-              return res.json({ token });
+              return res.json({ token, userName });
           } else {
               res.status(401).json({ msg: 'Wrong password' });
           }
