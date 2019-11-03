@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET user's profile */
-router.get('/me', (req, res, next) => {
+router.get('/profile', (req, res, next) => {
   res.json({
     message: 'Authorized',
     user: req.user,

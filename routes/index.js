@@ -32,12 +32,25 @@ router.get('/', function(req, res, next) {
 router.get('/users', function(req, res) {
   getAllUsers().then(user => res.json(user));
 });
+
 // register route
-router.post('/user/register', function(req, res, next) {
-  const { userName, password } = req.body;
-  createUser({ userName, password }).then(user =>
-    res.json({ user, msg: 'account created successfully' })
-  );
+router.post('/user/register', async (req, res, next) => {
+  try {
+    const { userName, password } = req.body;
+    const user = await User.findOne({userName});
+    // If user is already exists
+    if (user)
+    {
+      res.status(409).json({ msg: 'Username is already exists', user });
+    }
+    else {
+      createUser({ userName, password }).then(user =>
+        res.json({ user, msg: 'Account created successfully' })
+      );
+    }
+  } catch (error) {
+    return next(error);
+  }
 });
 
 // authenticate passportJWT
