@@ -3,9 +3,11 @@ const UserModel = require('./models/user');
 
 // initialize an instance of Sequelize
 const sequelize = new Sequelize({
-  database: 'users_db',
-  username: 'root',
-  password: 'mysql41098',
+  database: 'kzj6hGtsLI',
+  username: 'kzj6hGtsLI',
+  password: 'LRUf8fPWen',
+  port: '3306',
+  host: 'remotemysql.com',
   dialect: 'mysql',
 });
 // check the databse connection

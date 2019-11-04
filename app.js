@@ -19,11 +19,27 @@ app.use(cors());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// Passport session setup.
+passport.serializeUser(function(user, done) {
+  console.log(user);
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+//app.use(session({ secret: 'keyboard cat', key: 'sid'}));  //Save user login
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);

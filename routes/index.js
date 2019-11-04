@@ -37,7 +37,7 @@ router.get('/users', function(req, res) {
 router.post('/user/register', async (req, res, next) => {
   try {
     const { userName, password } = req.body;
-    const user = await User.findOne({userName});
+    const user = await getUser({ userName });
     // If user is already exists
     if (user)
     {
@@ -76,6 +76,25 @@ router.post('/user/login', async (req, res, next) => {
     }
   })(req, res, next);
 });
+
+// Facebook
+router.get('/account', ensureAuthenticated, function(req, res){
+  console.log(req.user);
+	 res.render('account', { user: req.user });
+});
+
+router.get('/auth/facebook', passport.authenticate('facebook',{scope:'email'}));
+
+router.get('/auth/facebook/callback',
+	passport.authenticate('facebook', { successRedirect : '/', failureRedirect: '/failed' }),
+	function(req, res) {
+	//res.redirect('/');
+});
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  //res.redirect('/')
+}
 
 
 module.exports = router;

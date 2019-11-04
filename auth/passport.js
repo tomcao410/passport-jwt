@@ -1,8 +1,11 @@
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
+const config = require('./config');
+
 const localStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
 
+const FacebookStrategy  = require('passport-facebook').Strategy;
 const JWTstrategy = require('passport-jwt').Strategy;
 //We use this to extract the JWT sent by the user
 const ExtractJWT = require('passport-jwt').ExtractJwt;
@@ -61,3 +64,18 @@ passport.use(new JWTstrategy({
     done(error);
   }
 }));
+
+
+// FacebookStrategy with Passport.
+passport.use(new FacebookStrategy({
+    clientID: config.facebook_key,
+    clientSecret:config.facebook_secret ,
+    callbackURL: config.callback_url
+  },
+  function(accessToken, refreshToken, profile, done) {
+    process.nextTick(function () {
+      console.log(accessToken, refreshToken, profile, done);
+      return done(null, profile);
+    });
+  }
+));
