@@ -8,6 +8,9 @@ module.exports = function (sequelize, DataTypes) {
         },
         password: {
             type: DataTypes.STRING
+        },
+        type: {
+            type: DataTypes.INTEGER
         }
     })
 
