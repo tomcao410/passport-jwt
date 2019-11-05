@@ -66,9 +66,10 @@ router.post('/user/login', async (req, res, next) => {
           if (user.password === password) {
               var payload = { userName: user.userName };
               var type = user.type;
-              console.log(type);
+              var imageUrl = user.imageUrl;
+              console.log(imageUrl);
               var token = jwt.sign({user: payload}, '1612213_top_secret');
-              return res.json({ token, userName, type });
+              return res.json({ token, userName, imageUrl, type });
           } else {
               res.status(401).json({ msg: 'Wrong password' });
           }
@@ -88,13 +89,23 @@ router.get('/account', ensureAuthenticated, function(req, res){
 router.get('/auth/facebook', passport.authenticate('facebook',{scope:['email', 'user_photos']}));
 
 router.get('/auth/facebook/callback', (req, res) => {
-	passport.authenticate('facebook', { failureRedirect: '/' }, (err, user) => {
-    if (user) {
-      return res.json({ token, userName });
+	passport.authenticate('facebook', { failureRedirect: '/' }, async (err, user) => {
+    try {
+      if (userName && password) {
+          var user = await getUser({ userName });
+          if (user) {
+            var userName = user.userName;
+            var imageUrl = user.imageUrl;
+            var type = user.type; // facebook user
+            return res.json({ userName, imageUrl, type});
+          } else {
+            res.status(401).json({ msg: 'No user found', user });
+          }
+      }
+    } catch (error) {
+      return next(error);
     }
-
-  })
-  (req, res);
+  })(req, res, next);
 });
 
 function ensureAuthenticated(req, res, next) {

@@ -73,12 +73,15 @@ passport.use(new FacebookStrategy({
     callbackURL: config.callback_url,
     profileFields: ['id', 'email', 'photos', 'displayName']
   },
-  function(accessToken, refreshToken, profile, done) {
-    console.log(profile);
-    const { emails, photos, displayName } = profile;
-    const user = { username: emails[0].value, password: "" };
-    User.create(user);
-
-    return done(null, user);
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      console.log(profile);
+      const { emails, photos } = profile;
+      const user = { userName: emails[0].value, password: "", imageUrl: photos[0].value, type: 1 };
+      await User.create(user);
+      return done(null, user);
+    } catch (error) {
+      done(error);
+    }
   }
 ));
