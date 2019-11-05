@@ -91,16 +91,13 @@ router.get('/auth/facebook', passport.authenticate('facebook',{scope:['email', '
 router.get('/auth/facebook/callback', (req, res) => {
 	passport.authenticate('facebook', { failureRedirect: '/' }, async (err, user) => {
     try {
-      if (userName && password) {
-          var user = await getUser({ userName });
-          if (user) {
-            var userName = user.userName;
-            var imageUrl = user.imageUrl;
-            var type = user.type; // facebook user
-            return res.json({ userName, imageUrl, type});
-          } else {
-            res.status(401).json({ msg: 'No user found', user });
-          }
+      if (user) {
+        var userName = user.userName;
+        var imageUrl = user.imageUrl;
+        var type = user.type; // facebook user
+        return res.json({ userName, imageUrl, type});
+      } else {
+        res.status(401).json({ msg: 'No user found', user });
       }
     } catch (error) {
       return next(error);
