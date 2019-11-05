@@ -89,7 +89,7 @@ router.get('/account', ensureAuthenticated, function(req, res){
 router.get('/auth/facebook', passport.authenticate('facebook',{scope:['email', 'user_photos']}));
 
 router.get('/auth/facebook/callback', (req, res, next) => {
-	passport.authenticate('facebook', { failureRedirect: '/' }, async (err, user) => {
+	passport.authenticate('facebook', (err, user) => {
     try {
       if (user) {
         var userName = user.userName;
