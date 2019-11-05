@@ -65,8 +65,9 @@ router.post('/user/login', async (req, res, next) => {
           }
           if (user.password === password) {
               var payload = { userName: user.userName };
+              var { type } = user;
               var token = jwt.sign({user: payload}, '1612213_top_secret');
-              return res.json({ token, userName, user.type });
+              return res.json({ token, userName, type });
           } else {
               res.status(401).json({ msg: 'Wrong password' });
           }
