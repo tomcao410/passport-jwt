@@ -70,12 +70,15 @@ passport.use(new JWTstrategy({
 passport.use(new FacebookStrategy({
     clientID: config.facebook_key,
     clientSecret:config.facebook_secret ,
-    callbackURL: config.callback_url
+    callbackURL: config.callback_url,
+    profileFields: ['id', 'email', 'photos', 'displayName']
   },
   function(accessToken, refreshToken, profile, done) {
-    process.nextTick(function () {
-      console.log(accessToken, refreshToken, profile, done);
-      return done(null, profile);
-    });
+    console.log(profile);
+    const { emails, photos, displayName } = profile;
+    const user = { username: emails[0].value, password: "" };
+    User.create(user);
+
+    return done(null, user);
   }
 ));

@@ -66,7 +66,7 @@ router.post('/user/login', async (req, res, next) => {
           if (user.password === password) {
               var payload = { userName: user.userName };
               var token = jwt.sign({user: payload}, '1612213_top_secret');
-              return res.json({ token, userName });
+              return res.json({ token, userName, type });
           } else {
               res.status(401).json({ msg: 'Wrong password' });
           }
@@ -83,12 +83,16 @@ router.get('/account', ensureAuthenticated, function(req, res){
 	 res.render('account', { user: req.user });
 });
 
-router.get('/auth/facebook', passport.authenticate('facebook',{scope:'email'}));
+router.get('/auth/facebook', passport.authenticate('facebook',{scope:['email', 'user_photos']}));
 
-router.get('/auth/facebook/callback',
-	passport.authenticate('facebook', { successRedirect : '/', failureRedirect: '/failed' }),
-	function(req, res) {
-	//res.redirect('/');
+router.get('/auth/facebook/callback', (req, res) => {
+	passport.authenticate('facebook', { failureRedirect: '/' }, (err, user) => {
+    if (user) {
+      return res.json({ token, userName });
+    }
+
+  })
+  (req, res);
 });
 
 function ensureAuthenticated(req, res, next) {
